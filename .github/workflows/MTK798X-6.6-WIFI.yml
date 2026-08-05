@@ -1,31 +1,26 @@
-name: IPQ60XX-6.12-NOWIFI
+name: MTK798X-6.6-WIFI
 
 on:
   workflow_dispatch:
   #schedule:
   #  - cron: 0 19 * * *
 
-#permissions:
-#  contents: read
-#  actions: read
-
 defaults:
   run:
     shell: bash
-
+  
 env:
-  REPO_URL: https://github.com/LiBwrt/openwrt-6.x.git
-  REPO_BRANCH: v25.12.1
-  CONFIG_FILE: configs/ipq60xx-6.12-nowifi.config
-  DIY_SCRIPT: libwrt.sh
-  CLASH_KERNEL: amd64
+  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6.git
+  REPO_BRANCH: openwrt-24.10-6.6
+  CONFIG_FILE: configs/rax3000m-nand-6.6-wifi.config
+  DIY_SCRIPT: scripts/mtk798x.sh
   CACHE_TOOLCHAIN: true
   FIRMWARE_RELEASE: true
-  FIRMWARE_TAG: IPQ60XX-6.12-NOWIFI
-  ARTIFACT_PREFIX: IPQ60XX
-  PACKAGE_EXTENSION: apk
+  FIRMWARE_TAG: MTK798X-6.6-WIFI
+  ARTIFACT_PREFIX: MTK798X
+  PACKAGE_EXTENSION: ipk
   TZ: Asia/Shanghai
-
+  
 jobs:
   Build:
     runs-on: ubuntu-24.04
@@ -94,7 +89,7 @@ jobs:
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
         echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
+        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.6)
         echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
 
     - name: Disable Mainland Mirrors(屏蔽大陆下载源)
@@ -148,7 +143,7 @@ jobs:
             find "$dir" -type f -exec touch {} +
           done
         fi
-    
+
     - name: Install Feeds(安装feeds)
       run: |
         cd $OPENWRT_PATH
@@ -170,7 +165,6 @@ jobs:
         make download -j"$(nproc)"
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
     - name: Compile Firmware(开始编译固件)
       id: compile
       run: |
