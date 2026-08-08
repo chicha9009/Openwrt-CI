@@ -30,5 +30,5 @@ rm -rf feeds/luci/applications/luci-app-eqos
 
 git clone --depth=1 https://github.com/chicha9009/luci-app-eqos.git feeds/luci/applications/luci-app-eqos
 
-./scripts/feeds update  -a
+./scripts/feeds update -a
 ./scripts/feeds install -a

@@ -49,3 +49,5 @@ function git_sparse_clone() {
 git_sparse_clone master https://github.com/kenzok8/openwrt-packages luci-app-adguardhome
 mv -f package/luci-app-adguardhome feeds/luci/applications/luci-app-adguardhome
 
+./scripts/feeds update -a
+./scripts/feeds install -a
