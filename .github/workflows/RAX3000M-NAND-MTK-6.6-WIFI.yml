@@ -1,4 +1,4 @@
-name: MTK798X-6.6-WIFI
+name: RAX3000M-NAND-MTK-6.6-WIFI
 
 on:
   workflow_dispatch:
@@ -107,7 +107,7 @@ jobs:
         mv "$mirror_file.tmp" "$mirror_file"
         sed -i '/raw\.gitmirror\.com/d' scripts/download.pl
 
-    - name: Generate Variables
+    - name: Generate Variables(生成变量)
       run: |
         cp $CONFIG_FILE $OPENWRT_PATH/.config
         cd $OPENWRT_PATH
@@ -226,8 +226,8 @@ jobs:
         artifacts: ${{ env.FIRMWARE_PATH }}/*
         body: |
           **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
-          ### 📒 固件信息(无WIFI)
-          - 无WIFI带有线NSS的6.12内核固件
+          ### 📒 固件信息
+          - 没有什么杂乱的插件，集成自动重启、diskman、vlmcsd、无科学插件的6.6内核固件
           - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}

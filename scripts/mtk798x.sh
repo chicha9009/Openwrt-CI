@@ -20,8 +20,32 @@ sed -i "s#_('Firmware Version'), (L\.isObject(boardinfo\.release) ? boardinfo\.r
                 }, [ 'Built by 不如吃茶去' ])\n \
             ]),#" "$luci_system_js"
 
+# 删除要替换的包
+rm -rf feeds/luci/applications/luci-app-adguardhome
 
 
 sudo apt install libfuse-dev
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
+
+# Git稀疏克隆，只克隆指定目录到本地
+function git_sparse_clone() {
+  local branch="$1"
+  local repourl="$2"
+  local repodir
+  shift 2
+
+  repodir="$(basename "${repourl%.git}")"
+  rm -rf "$repodir"
+  git clone --depth=1 -b "$branch" --single-branch --filter=blob:none --sparse "$repourl" "$repodir"
+  (
+    cd "$repodir"
+    git sparse-checkout set "$@"
+    mv -f "$@" ../package
+  )
+  rm -rf "$repodir"
+}
+
+git_sparse_clone master https://github.com/kenzok8/openwrt-packages luci-app-adguardhome
+mv -f package/luci-app-adguardhome feeds/luci/applications/luci-app-adguardhome
+
